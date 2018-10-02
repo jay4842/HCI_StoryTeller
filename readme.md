@@ -8,3 +8,17 @@ The classes will be:
 
 The image dataset will be the urls for each image synset.   
 Images retrieved from the ImageNet [website](http://image-net.org/index).  
+  
+## Downloading  
+Using the `download.py` file you can download all ten classes images. The  
+`runner.py` file will handle splitting data into test and train splits.  
+This will be done by doing a 70/30 split. Keep in mind that it will take  
+some time to finish downloading all the images.  
+
+# Running
+
+## Training
+
+## Testing
+
+# Future work
