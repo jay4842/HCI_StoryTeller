@@ -12,6 +12,7 @@ def down_url(url, file_name):
 
 # main function
 def setup_folder(url_list, folder_name):
+    print('Downloading -> {}'.fomrat(folder_name))
     # first make our save directory
     os.makedirs(folder_name, exist_ok=True)
     # a url list will be like this: <class name>_url.txt
@@ -21,22 +22,21 @@ def setup_folder(url_list, folder_name):
     idx = 0
     spin = 0
     # Now for each line try to download the file and save it in the directory
-    spins = ['|', '/', '-', '\\']
-
+    spins = ['|', '/', '-', '\\'] # spinner to show that things are working
     with open(url_list, 'r') as file:
-        for line in file:
+        for line in file: # go through the file
             line = line.replace('\n', '')
-            down_url(line, '{}{}_{}.jpg'.format(folder_name,class_name,idx))
-            sleep(0.05) # sleep for .05 of a second. Dont 
+            down_url(line, '{}{}_{}.jpg'.format(folder_name,class_name,idx)) # download
             idx += 1
-            print('\r{}'.format(spins[spin]),end='')
-            spin += 1
+            print('\r{}'.format(spins[spin]),end='') # print out
+            spin += 1 # for the spinner
             if(spin > 3):
                 spin = 0;
+    print('\nComplete') # done
 
 if __name__ == '__main__':
-    text_files = glob('*.txt')
-    for text_file in text_files:
+    text_files = glob('*.txt') # get all of out url lists
+    for text_file in text_files:# for each of them run the downloader
         folder = text_file.split('_')[0]
         setup_folder(text_file, '{}/'.format(folder))
 
