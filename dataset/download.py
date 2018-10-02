@@ -39,7 +39,3 @@ if __name__ == '__main__':
     for text_file in text_files:# for each of them run the downloader
         folder = text_file.split('_')[0]
         setup_folder(text_file, '{}/'.format(folder))
-
-
-
-
