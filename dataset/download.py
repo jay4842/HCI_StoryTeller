@@ -12,7 +12,7 @@ def down_url(url, file_name):
 
 # main function
 def setup_folder(url_list, folder_name):
-    print('Downloading -> {}'.fomrat(folder_name))
+    print('Downloading -> {}'.format(folder_name))
     # first make our save directory
     os.makedirs(folder_name, exist_ok=True)
     # a url list will be like this: <class name>_url.txt
