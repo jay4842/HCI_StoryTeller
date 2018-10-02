@@ -29,6 +29,7 @@ def setup_folder(url_list, folder_name):
             down_url(line, '{}{}_{}.jpg'.format(folder_name,class_name,idx)) # download
             idx += 1
             print('\r{}'.format(spins[spin]),end='') # print out
+            sleep(0.05)
             spin += 1 # for the spinner
             if(spin > 3):
                 spin = 0;
