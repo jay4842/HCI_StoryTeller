@@ -8,7 +8,7 @@ def down_url(url, file_name):
     try:
         urllib.request.urlretrieve(url, file_name)
     except Exception as ex:
-        pass
+        print('\n{}'.format(ex))
 
 # main function
 def setup_folder(url_list, folder_name):
@@ -26,9 +26,11 @@ def setup_folder(url_list, folder_name):
     with open(url_list, 'r') as file:
         for line in file: # go through the file
             line = line.replace('\n', '')
-            down_url(line, '{}{}_{}.jpg'.format(folder_name,class_name,idx)) # download
+            if(not os.path.exists('{}{}_{}.jpg'.format(folder_name,class_name,idx))):
+                down_url(line, '{}{}_{}.jpg'.format(folder_name,class_name,idx)) # download
             idx += 1
-            print('\r{}'.format(spins[spin]),end='') # print out
+            print('\r{} {}'.format(spins[spin], line),end='') # print out
+            sleep(0.05)
             spin += 1 # for the spinner
             if(spin > 3):
                 spin = 0;
