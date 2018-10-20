@@ -2,6 +2,39 @@ import urllib.request
 import os
 from time import sleep
 from glob import glob
+from datetime import timedelta
+import time
+import multiprocessing
+from multiprocessing import Process,Queue
+
+###### MULIT THREADER
+def multi_thread(procs,max_procs=2):
+    prcos_left = len(procs)
+    start_time = time.time()
+    spin = 0
+    # Now for each line try to download the file and save it in the directory
+    spins = ['|', '/', '-', '\\'] # spinner to show that things are working
+    try:
+        for p in procs:
+            while(len(multiprocessing.active_children()) > max_procs):
+                pass
+            prcos_left -= 1
+            p.start()
+            print('\r{}'.format(spins[spin]),end='') # print out
+            spin += 1 # for the spinner
+            if(spin > 3):
+                spin = 0
+        while(len(multiprocessing.active_children()) > 0):
+            pass
+        print("Procs complete")
+    except KeyboardInterrupt:
+        pass
+    finally:
+        for p in procs:
+            p.join() # join the boys
+    elapsed_time = time.time() - start_time
+    seconds = timedelta(seconds=int(round(elapsed_time)))
+    print("Time elapsed: " + str(seconds))
 
 # Download a file from a url
 def down_url(url, file_name):
@@ -23,18 +56,18 @@ def setup_folder(url_list, folder_name):
     spin = 0
     # Now for each line try to download the file and save it in the directory
     spins = ['|', '/', '-', '\\'] # spinner to show that things are working
+    procs = [] # for storing all the processes that will be done
     with open(url_list, 'r') as file:
         for line in file: # go through the file
             line = line.replace('\n', '')
-            if(not os.path.exists('{}{}_{}.jpg'.format(folder_name,class_name,idx))):
-                down_url(line, '{}{}_{}.jpg'.format(folder_name,class_name,idx)) # download
+            ext = line.split('/')[-1].split('.')[-1]
+            if(not os.path.exists('{}{}_{}.{}'.format(folder_name,class_name,idx,ext))):
+                procs.append(Process(target=down_url, args=(line, '{}{}_{}.{}'.format(folder_name,class_name,idx,ext),))) # download
             idx += 1
-            print('\r{} {}'.format(spins[spin], line),end='') # print out
-            sleep(0.05)
-            spin += 1 # for the spinner
-            if(spin > 3):
-                spin = 0;
-    print('\nComplete') # done
+    
+        file.close()
+    # use the multi threader to process all of our procs
+    multi_thread(procs, max_procs=4)
 
 if __name__ == '__main__':
     text_files = glob('*.txt') # get all of out url lists
