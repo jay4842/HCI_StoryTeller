@@ -1,6 +1,6 @@
 import tensorflow as tf
 import numpy as np
-import src.model_helpers as mh
+import src.net.model_helpers as mh
 # network types:
 
 # This is one of the vgg implementations
@@ -158,7 +158,7 @@ def deconv_layer(x,upscale,k_shape=4, name='deconv_layer',pad='SAME'):
     w_shape = [k_shape, k_shape, in_shape[-1], in_shape[-1]]
     strides = [1, upscale, upscale, 1]
     
-    W = weight_variable(w_shape)
+    W = mh.weight_variable(w_shape)
     #print(W.shape)
 
     out_shape = [x_shape[0], x_shape[1] * upscale, x_shape[2] * upscale, in_shape[-1]]
