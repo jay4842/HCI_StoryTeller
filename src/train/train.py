@@ -91,14 +91,17 @@ def train(args, image_size=[64,64], channels=3):
                         text = 'Epoch [{}/{}] | [{}/{}] VAL loss : {:.4f} VAL accuracy : {:.4f} VAL RMSE : {:.3f}'.format(e,args.epochs-1, idx, epoch_size, loss_, acc_, rmse_)
                         out_file.write('{}\n'.format(text))
                         cprint('\r{}'.format(text), 'yellow', attrs=['bold'])    
-            # end of epoch
-            elapsed_time = time.time() - start_time
-            time_out = time.strftime("%H:%M:%S", time.gmtime(elapsed_time))
-            out_file.write('elapsed_time: {}\t raw: {}\n'.format(time_out, elapsed_time))
-            out_file.close()
-            saver = tf.train.Saver()
-            saver.save(sess, args.save_dir + 'epoch_{}_model.ckpt'.format(e),global_step=epoch_size + (e*epoch_size)) # save our model state
+                # end of epoch
+                elapsed_time = time.time() - start_time
+                time_out = time.strftime("%H:%M:%S", time.gmtime(elapsed_time))
+                out_file.write('elapsed_time: {}\t raw: {}\n'.format(time_out, elapsed_time))
+                out_file.close()
+                saver = tf.train.Saver()
+                saver.save(sess, args.save_dir + 'epoch_{}_model.ckpt'.format(e),global_step=epoch_size + (e*epoch_size)) # save our model state
+
         # end
-        print('\nDone!')
+        elapsed_time = time.time() - start_time
+        time_out = time.strftime("%H:%M:%S", time.gmtime(elapsed_time))
+        print('\n{}\nDone!'.format(time_out))
         
 
