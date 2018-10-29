@@ -5,7 +5,7 @@ import argparse
 # custom imports
 import src.downloader as down
 import src.train.train as train
-
+import src.text.rnn_train as rnn
 data_dir = 'data/'
 restore_path = 'final/'
 
@@ -32,8 +32,11 @@ if __name__ == '__main__':
     if not(os.path.exists('data/cifar-10/')):
         down.get_cifar_10(save_dir='data/cifar-10/')
     
-    if(args.train and args.mode=='classify'):
-        train.train(args, image_size=[64,64])
+    if(args.train):
+        if(args.mode=='classify'):
+            train.train(args, image_size=[64,64])
+        elif(args.mode=='rnn'):
+            rnn.train_rnn(args)
 
 
 
