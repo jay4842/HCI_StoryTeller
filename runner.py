@@ -21,6 +21,10 @@ parser.add_argument('--num_classes', dest='num_classes', default=10, type=int, h
 parser.add_argument('--train', dest='train', type=bool ,default=False, help='Set runner to train.')
 parser.add_argument('--test', dest='test', type=bool ,default=False, help='Set runner to test.')
 parser.add_argument('--run', dest='run', default='ice_01', help='What we save our run as.')
+parser.add_argument('--mode', dest='mode', default='classify', help='Pick which network to run.')
+
+# rnn specific stuff here
+# more later
 args = parser.parse_args()
 
 
@@ -28,7 +32,7 @@ if __name__ == '__main__':
     if not(os.path.exists('data/cifar-10/')):
         down.get_cifar_10(save_dir='data/cifar-10/')
     
-    if(args.train):
+    if(args.train and args.mode=='classify'):
         train.train(args, image_size=[64,64])
 
 
