@@ -6,6 +6,7 @@ import argparse
 import src.downloader as down
 import src.train.train as train
 import src.text.rnn_train as rnn
+import src.text.txt_download as txt_down
 data_dir = 'data/'
 restore_path = 'final/'
 
@@ -23,6 +24,9 @@ parser.add_argument('--test', dest='test', type=bool ,default=False, help='Set r
 parser.add_argument('--run', dest='run', default='ice_01', help='What we save our run as.')
 parser.add_argument('--mode', dest='mode', default='classify', help='Pick which network to run.')
 
+# text download stuff
+parser.add_argument('--download_poe', dest='download_poe', type=bool, default=False, help='If we want to download poe data.')
+
 # rnn specific stuff here
 # more later
 args = parser.parse_args()
@@ -38,5 +42,7 @@ if __name__ == '__main__':
         elif(args.mode=='rnn'):
             rnn.train_rnn(args)
 
+    if(args.download_poe):
+        txt_down.download_poe()
 
 

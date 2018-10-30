@@ -17,6 +17,9 @@ Using the `download.py` file you can download all ten classes images. The
 This will be done by doing a 70/30 split. Keep in mind that it will take  
 some time to finish downloading all the images.  
 
+## RNN datasets
+- [Edgar Allan Poe](http://www.textfiles.com/etext/AUTHORS/POE/)
+
 # Running
 
 ## Training

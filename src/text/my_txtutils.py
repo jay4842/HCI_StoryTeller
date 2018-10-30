@@ -246,14 +246,16 @@ def read_data_files(directory, validation=True):
     bookranges = []
     shakelist = glob.glob(directory, recursive=True)
     for shakefile in shakelist:
-        shaketext = open(shakefile, "r")
-        print("Loading file " + shakefile)
-        start = len(codetext)
-        codetext.extend(encode_text(shaketext.read()))
-        end = len(codetext)
-        bookranges.append({"start": start, "end": end, "name": shakefile.rsplit("/", 1)[-1]})
-        shaketext.close()
-
+        try:
+            shaketext = open(shakefile, "r")
+            print("Loading file " + shakefile)
+            start = len(codetext)
+            codetext.extend(encode_text(shaketext.read()))
+            end = len(codetext)
+            bookranges.append({"start": start, "end": end, "name": shakefile.rsplit("/", 1)[-1]})
+            shaketext.close()
+        except Exception as ex:
+            print('error with file {}'.format(shakefile))
     if len(bookranges) == 0:
         sys.exit("No training data has been found. Aborting.")
 

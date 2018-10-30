@@ -31,7 +31,7 @@ def download_with_progress(link, save_path):
 				f.write(data)
 				done = (50 * dl // total_length)
 				print('\r[{}{}] {:.2f}Mb/{:.2f}Mb'.format('=' * done, ' ' * (50 - done), (dl/1024.0)/1024.0,size_MB), end='')
-
+		f.close()
 
 # extracts a tar file to the destination
 def extract(tar_, dest, remove_tar=False):
