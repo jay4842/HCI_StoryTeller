@@ -1,3 +1,11 @@
+# requirments
+- tensorflow >= 1.0
+- BeautifulSoup4
+- Numpy
+- OpenCV
+- requests
+- termcolor
+- Linux based OS (>= ubuntu 16.04)
 # Drive
 - [folder](https://drive.google.com/drive/folders/1fwhkkxTkv1GhdQuMBgT72--PmvSuGzkZ?usp=sharing)
 # The dataset

@@ -35,7 +35,7 @@ args = parser.parse_args()
 if __name__ == '__main__':
     if not(os.path.exists('data/cifar-10/')):
         down.get_cifar_10(save_dir='data/cifar-10/')
-    
+    os.system('clear') # clear screen
     if(args.train):
         if(args.mode=='classify'):
             train.train(args, image_size=[64,64])

@@ -18,7 +18,7 @@ def train_rnn(args):
     BATCHSIZE = 200
     ALPHASIZE = txt.ALPHASIZE
     INTERNALSIZE = 512
-    NLAYERS = 3
+    NLAYERS = 5
     learning_rate = 0.0002 # small learning rate
     dropout_keep = .9 # only some dropout they use .8 but .9 is my preference
 
@@ -56,7 +56,7 @@ def train_rnn(args):
     Yflat = tf.reshape(Yr, [-1, INTERNALSIZE])
     Ylogits = layers.linear(Yflat, ALPHASIZE)
     Yflat_ = tf.reshape(Yo_, [-1, ALPHASIZE]) 
-    loss = tf.nn.softmax_cross_entropy_with_logits(logits=Ylogits, labels=Yflat_)
+    loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits=Ylogits, labels=Yflat_)
     loss = tf.reshape(loss, [batch_size, -1])
     Yo = tf.nn.softmax(Ylogits, name='Yo')
     Y = tf.argmax(Yo, 1) 
@@ -76,9 +76,10 @@ def train_rnn(args):
     summary_writer = tf.summary.FileWriter("log/" + timestamp + "-training")
     validation_writer = tf.summary.FileWriter("log/" + timestamp + "-validation")
     # For saving models
-    os.makedirs('checkpoints/', exist_ok=True)
+    os.makedirs(args.save_dir, exist_ok=True)
     # Only the last checkpoint will be saved
     saver = tf.train.Saver(max_to_keep=1000)
+    gen_file = open(args.save_dir + 'generated.txt', 'w')
     # For displaying progress
     # - changing this to my own implementation
     # - Theyres is too much output
@@ -94,7 +95,7 @@ def train_rnn(args):
     sess.run(init)
     step = 0
     # Training loop
-    for x, y_, epoch in txt.rnn_minibatch_sequencer(codetext, BATCHSIZE, SEQLEN, nb_epochs=10):
+    for x, y_, epoch in txt.rnn_minibatch_sequencer(codetext, BATCHSIZE, SEQLEN, nb_epochs=args.epochs):
         # train on one minibatch
         feed_dict = {X: x, Y_: y_, Hin: istate, lr: learning_rate, p_keep: dropout_keep, batch_size: BATCHSIZE}
         _, y, ostate = sess.run([train_step, Y, H], feed_dict=feed_dict)
@@ -127,18 +128,22 @@ def train_rnn(args):
             txt.print_text_generation_header()
             ry = np.array([[txt.convert_from_alphabet(ord("K"))]])
             rh = np.zeros([1, INTERNALSIZE * NLAYERS])
+            gen_file.write('----------------- STEP {} -----------------\n'.format(step))
             for k in range(1000):
                 ryo, rh = sess.run([Yo, H], feed_dict={X: ry, p_keep: 1.0, Hin: rh, batch_size: 1})
                 rc = txt.sample_from_probabilities(ryo, topn=10 if epoch <= 1 else 2)
-                print(chr(txt.convert_to_alphabet(rc)), end="")
+                letter = (chr(txt.convert_to_alphabet(rc)))
+                gen_file.write(letter)
+                print(letter, end='')
                 ry = np.array([[rc]])
             txt.print_text_generation_footer()
-        # save a checkpoint (every 500 batches)
-        if step // 10 % _50_BATCHES == 0:
-            saved_file = saver.save(sess, 'checkpoints/rnn_train_' + timestamp, global_step=step)
-            print("Saved file: " + saved_file)
+            gen_file.write('\n')
         # display progress bar
         progress.step(reset=step % _50_BATCHES == 0)
         # loop state around
         istate = ostate
         step += BATCHSIZE * SEQLEN
+    
+    gen_file.close()
+    saved_file = saver.save(sess, '{}rnn_train_'.format(args.save_dir) + timestamp, global_step=step)
+    print("Saved file: " + saved_file)
