@@ -5,8 +5,10 @@ import argparse
 # custom imports
 import src.downloader as down
 import src.train.train as train
-import src.text.rnn_train as rnn
+import src.text.rnn_train as rnn_train
+import src.text.rnn_test as rnn_test
 import src.text.txt_download as txt_down
+
 data_dir = 'data/'
 restore_path = 'final/'
 
@@ -23,11 +25,13 @@ parser.add_argument('--train', dest='train', type=bool ,default=False, help='Set
 parser.add_argument('--test', dest='test', type=bool ,default=False, help='Set runner to test.')
 parser.add_argument('--run', dest='run', default='ice_01', help='What we save our run as.')
 parser.add_argument('--mode', dest='mode', default='classify', help='Pick which network to run.')
-
+parser.add_argument('--test_dir', dest='test_dir', default='test/', help='Where you want to save test results.')
 # text download stuff
 parser.add_argument('--download_poe', dest='download_poe', type=bool, default=False, help='If we want to download poe data.')
 
 # rnn specific stuff here
+parser.add_argument('--author', dest='author', default='poe', help='What author to be used for testing.')
+parser.add_argument('--test_size', dest='test_size', type=int, default=2000, help='How many characters to generate during testing.')
 # more later
 args = parser.parse_args()
 
@@ -36,11 +40,18 @@ if __name__ == '__main__':
     if not(os.path.exists('data/cifar-10/')):
         down.get_cifar_10(save_dir='data/cifar-10/')
     os.system('clear') # clear screen
+    # training
     if(args.train):
         if(args.mode=='classify'):
             train.train(args, image_size=[64,64])
         elif(args.mode=='rnn'):
-            rnn.train_rnn(args)
+            rnn_train.train_rnn(args)
+    # testing
+    if(args.test):
+        if(args.mode=='classify'):
+            pass
+        elif(args.mode=='rnn'):
+            rnn_test.test_rnn(args)
 
     if(args.download_poe):
         txt_down.download_poe()
