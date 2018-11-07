@@ -10,4 +10,4 @@ src/__pycache__/
 src/net/__pycache__/
 src/text/__pycache__/
 *.pyc
-rnn_saves/
+rnn_saves/twain/
