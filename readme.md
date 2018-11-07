@@ -5,7 +5,8 @@
 - OpenCV
 - requests
 - termcolor
-- Linux based OS (>= ubuntu 16.04)
+- Linux based OS (ex: ubuntu 16.04 || raspbian)
+  
 # Drive
 - [folder](https://drive.google.com/drive/folders/1fwhkkxTkv1GhdQuMBgT72--PmvSuGzkZ?usp=sharing)
 # The dataset
@@ -29,9 +30,9 @@ some time to finish downloading all the images.
 - [Edgar Allan Poe](http://www.textfiles.com/etext/AUTHORS/POE/)
 
 # Running
-
+TODO 
 ## Training
-
+TODO  
 ## Testing
-
+TODO  
 # Future work

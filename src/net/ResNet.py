@@ -7,6 +7,7 @@ import src.net.vgg_helpers as vgg
 # - https://github.com/tensorflow/models/blob/master/official/resnet/resnet_model.py 
 
 # - Using the tensorflow implementation for this guy.
+# Just modified it to be a little simplier to work with
 _BATCH_NORM_DECAY = 0.997
 _BATCH_NORM_EPSILON = 1e-5
 
@@ -203,7 +204,7 @@ def res_block_v1(inputs, filters, filters_out, training, projection_shortcut, st
 # a bit different than the previous implementation (cleaner than the older one)
 
 def res_block_v2(inputs, filters, filters_out, training, projection_shortcut, strides, name, data_format='channels_last'):
-    
+    # TODO add the res bock v2 that is mentioned in their paper
     with tf.variable_scope(name):
         shortcut = inputs
         inputs = batch_norm(inputs, training, data_format)
