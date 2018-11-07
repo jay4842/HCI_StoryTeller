@@ -30,9 +30,9 @@ some time to finish downloading all the images.
 - [Edgar Allan Poe](http://www.textfiles.com/etext/AUTHORS/POE/)
 
 # Running
-
+TODO 
 ## Training
-
+TODO  
 ## Testing
-
+TODO  
 # Future work
