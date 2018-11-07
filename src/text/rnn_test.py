@@ -87,3 +87,4 @@ def test_rnn(args):
                 test_file.write('\n')
                 ncnt = 0
         test_file.close()
+    print('\n')
