@@ -27,6 +27,7 @@ parser.add_argument('--test', dest='test', type=bool ,default=False, help='Set r
 parser.add_argument('--run', dest='run', default='ice_01', help='What we save our run as.')
 parser.add_argument('--mode', dest='mode', default='classify', help='Pick which network to run.')
 parser.add_argument('--test_dir', dest='test_dir', default='test/', help='Where you want to save test results.')
+parser.add_argument('--restore', dest='restore', default=None, help='Point to where our model save is.')
 # text download stuff
 parser.add_argument('--download_poe', dest='download_poe', type=bool, default=False, help='If we want to download poe data.')
 
