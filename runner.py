@@ -45,7 +45,7 @@ if __name__ == '__main__':
     os.system('clear') # clear screen
 
     #cifar-100 stuff
-    if (args.download_cifar100)
+    if (args.download_cifar100):
         down.get_cifar_100(save_dir='data/cifar-100/')
     os.system('clear') # clear screen
 
