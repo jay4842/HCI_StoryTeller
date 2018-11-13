@@ -26,6 +26,8 @@ parser.add_argument('--test', dest='test', type=bool ,default=False, help='Set r
 parser.add_argument('--run', dest='run', default='ice_01', help='What we save our run as.')
 parser.add_argument('--mode', dest='mode', default='classify', help='Pick which network to run.')
 parser.add_argument('--test_dir', dest='test_dir', default='test/', help='Where you want to save test results.')
+parser.add_argument('--download_cifar100', dest='download_cifar100', type=bool, default=False, default='data/cifar-100/', help='Downlad cifar-100 data set')
+
 # text download stuff
 parser.add_argument('--download_poe', dest='download_poe', type=bool, default=False, help='If we want to download poe data.')
 
@@ -40,6 +42,12 @@ if __name__ == '__main__':
     if not(os.path.exists('data/cifar-10/')):
         down.get_cifar_10(save_dir='data/cifar-10/')
     os.system('clear') # clear screen
+
+    #cifar-100 stuff
+    if (args.download_cifar100)
+        down.get_cifar_100(save_dir='data/cifar-100/')
+    os.system('clear') # clear screen
+
     # training
     if(args.train):
         if(args.mode=='classify'):
