@@ -11,3 +11,7 @@ src/net/__pycache__/
 src/text/__pycache__/
 *.pyc
 rnn_saves/twain/
+src/__pycache__/downloader.cpython-36.pyc
+src/net/__pycache__/ResNet.cpython-36.pyc
+src/text/__pycache__/my_txtutils.cpython-36.pyc
+src/text/__pycache__/rnn_train.cpython-36.pyc

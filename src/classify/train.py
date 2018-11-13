@@ -27,7 +27,7 @@ def train(args, image_size=[64,64], channels=3):
     cifar_spliter = '+'
     # now setup the network
     with tf.variable_scope('network'):
-        net_in = resnet.ResNet_18(args, x, image_size, type_='cifar-10', pooling='avg')
+        net_in = resnet.ResNet_34(args, x, image_size, type_='cifar-10', pooling='avg')
         logits, _ = resnet.inference(args, net_in, cifar_classes)
     
     with tf.variable_scope('train'):

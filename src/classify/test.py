@@ -10,7 +10,7 @@ import src.net.vgg_helpers as vgg
 import src.net.ResNet as resnet
 import src.util as util
 
-def test(args, image_size=[64,64], channels=3):
+def run_test(args, image_size=[64,64], channels=3):
     accs  = []
     os.makedirs(args.save_dir, exist_ok=True)
     with tf.variable_scope('input'):
@@ -23,7 +23,7 @@ def test(args, image_size=[64,64], channels=3):
     cifar_spliter = '+'
     # now setup the network
     with tf.variable_scope('network'):
-        net_in = resnet.ResNet_18(args, x, image_size, type_='cifar-10', pooling='avg')
+        net_in = resnet.ResNet_34(args, x, image_size, type_='cifar-10', pooling='avg')
         logits, _ = resnet.inference(args, net_in, cifar_classes)
     
     with tf.variable_scope('train'):
@@ -38,7 +38,7 @@ def test(args, image_size=[64,64], channels=3):
             _op, rmse = tf.metrics.mean_squared_error(arg_label, arg_logit)
     
     sess = util.get_session()
-    
     for path in images_in:
         print('\r{}'.format(path), end='')
+        image, label = util.get_test_image(path, label_split='+', classes=cifar_classes)
         # load image

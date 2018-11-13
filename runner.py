@@ -5,6 +5,7 @@ import argparse
 # custom imports
 import src.downloader as down
 import src.classify.train as train
+import src.classify.test as test
 import src.text.rnn_train as rnn_train
 import src.text.rnn_test as rnn_test
 import src.text.txt_download as txt_down
@@ -57,7 +58,7 @@ if __name__ == '__main__':
     # testing
     if(args.test):
         if(args.mode=='classify'):
-            pass
+            test.run_test(args)
         elif(args.mode=='rnn'):
             rnn_test.test_rnn(args)
 
