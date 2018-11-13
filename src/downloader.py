@@ -180,6 +180,110 @@ def get_cifar_10(save_dir='data/cifar-10/'):
 
 	# done
 
+#cifar-100
+'''_________________________________________________________________________________________'''
+def get_cifar_100(save_dir='data/cifar-100/'):
+	link = 'https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz'
+	data_file = 'cifar-100-python.tar.gz'
+
+	download_with_progress(link, data_file)
+
+	# now save the file
+	print('\rextracting file...\n', end='')
+	makedir('data/')
+	makedir(save_dir)
+	tar = tarfile.open(data_file)
+	tar.extractall(save_dir + '/')
+	tar.close()
+
+	os.remove(data_file) # and delete the tar boy
+	# now setup the rest of the data...
+	
+	folder_path = save_dir + 'cifar-100-batches-py/'
+	meta = unpickle(folder_path+'batches.meta')[b'label_names']
+	names = [x.decode('utf-8') for x in meta]
+
+	# write the classes that are in the dataset to a file
+	with open(save_dir + 'classes.txt', 'w') as file:
+		for name in names:
+			file.write('\'' + name + '\', ')
+		file.write('\n')
+		file.close()
+
+	start = save_dir 
+	# for train
+	img_size = 32
+	n_channels = 3
+	num_classes = 100
+	_images_per_file = 500
+	save = start + 'train/'
+	makedir(save)
+	files = glob(folder_path + 'data_batch_*')
+	all_tags = []
+'''
+	print('\nExtracting Train images....')
+	len_files = len(files)
+
+	print(files)
+	for idx in range(len_files):
+		print('\r{}/{}'.format(idx,len_files), end='')
+		file = files[idx].replace('\\','/')
+		raw_data = unpickle(file)
+		raw_img = raw_data[b'data']
+
+		images = convert_images(raw_img)
+		cls = np.array(raw_data[b'labels'])
+		filenames = np.array(raw_data[b'filenames'])
+		filenames = [x.decode('utf-8') for x in filenames]
+		# now save all the images with the label attached
+		for x in range(len(images)):
+			tag = names[cls[x]] + '+' + filenames[x]
+			out = images[x] * 255.0
+			cv2.imwrite(save+tag,out)
+			all_tags.append(tag)
+
+	with open(save_dir + 'train.lst','w') as file:
+		for tag in all_tags:
+			file.write('train/'+ tag + '\n')
+		file.close()
+	
+	# now do the test images
+	all_tags = []
+	raw_data = unpickle(folder_path + 'test_batch')
+	raw_img = raw_data[b'data']
+	images = convert_images(raw_img)
+	cls = np.array(raw_data[b'labels'])
+	filenames = np.array(raw_data[b'filenames'])
+	filenames = [x.decode('utf-8') for x in filenames]
+	save = start + 'test/'
+	makedir(save)
+
+	print(len(images))
+	print(len(cls))
+	print(len(filenames))
+	for x in range(len(images)):
+		tag = names[cls[x]] + '+' + filenames[x]
+		#print(tag)
+		#show(images[x])
+		out = images[x] * 255.0
+		#show(out)
+		cv2.imwrite(save+tag,out)
+		#print(np.shape(images[x]))
+		#input('->')
+		all_tags.append(tag)
+
+
+	with open(save_dir + 'test.lst','w') as file:
+		for tag in all_tags:
+			file.write('test/' + tag + '\n')
+
+		file.close()#'''
+	
+	# remove files that are not needed
+	#shutil.rmtree(folder_path)
+'''_________________________________________________________________________________________'''
+#done
+
 # working on this guy
 def get_image_net_2012(save_dir='E:/BINA/image_net_2012/', extract_tar=True):
 	if(not os.path.exists(save_dir)): makedir(save_dir)
