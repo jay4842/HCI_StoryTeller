@@ -186,23 +186,24 @@ def get_cifar_100(save_dir='data/cifar-100/'):
 	link = 'https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz'
 	data_file = 'cifar-100-python.tar.gz'
 
-	download_with_progress(link, data_file)
+	#download_with_progress(link, data_file)
 
 	# now save the file
+	print('\n-- Download Complete --')
 	print('\rextracting file...\n', end='')
 	makedir('data/')
 	makedir(save_dir)
-	tar = tarfile.open(data_file)
-	tar.extractall(save_dir + '/')
-	tar.close()
+	#tar = tarfile.open(data_file)
+	#tar.extractall(save_dir + '/')
+	#tar.close()
 
-	os.remove(data_file) # and delete the tar boy
+	#os.remove(data_file) # and delete the tar boy
 	# now setup the rest of the data...
 	
-	folder_path = save_dir + 'cifar-100-batches-py/'
-	meta = unpickle(folder_path+'batches.meta')[b'label_names']
-	names = [x.decode('utf-8') for x in meta]
-
+	folder_path = save_dir + 'cifar-100-python/'
+	meta = unpickle(folder_path+'meta')
+	names = meta[b'fine_label_names']
+	names = [x.decode('utf-8') for x in names]
 	# write the classes that are in the dataset to a file
 	with open(save_dir + 'classes.txt', 'w') as file:
 		for name in names:
@@ -218,9 +219,9 @@ def get_cifar_100(save_dir='data/cifar-100/'):
 	_images_per_file = 500
 	save = start + 'train/'
 	makedir(save)
-	files = glob(folder_path + 'data_batch_*')
+	files = [folder_path + 'train']
 	all_tags = []
-'''
+
 	print('\nExtracting Train images....')
 	len_files = len(files)
 
@@ -230,15 +231,16 @@ def get_cifar_100(save_dir='data/cifar-100/'):
 		file = files[idx].replace('\\','/')
 		raw_data = unpickle(file)
 		raw_img = raw_data[b'data']
-
+		print(raw_data.keys())
 		images = convert_images(raw_img)
-		cls = np.array(raw_data[b'labels'])
+		cls = np.array(raw_data[b'fine_labels'])
 		filenames = np.array(raw_data[b'filenames'])
 		filenames = [x.decode('utf-8') for x in filenames]
 		# now save all the images with the label attached
 		for x in range(len(images)):
 			tag = names[cls[x]] + '+' + filenames[x]
 			out = images[x] * 255.0
+			out = out[...,::-1]
 			cv2.imwrite(save+tag,out)
 			all_tags.append(tag)
 
@@ -249,10 +251,10 @@ def get_cifar_100(save_dir='data/cifar-100/'):
 	
 	# now do the test images
 	all_tags = []
-	raw_data = unpickle(folder_path + 'test_batch')
+	raw_data = unpickle(folder_path + 'test')
 	raw_img = raw_data[b'data']
 	images = convert_images(raw_img)
-	cls = np.array(raw_data[b'labels'])
+	cls = np.array(raw_data[b'fine_labels'])
 	filenames = np.array(raw_data[b'filenames'])
 	filenames = [x.decode('utf-8') for x in filenames]
 	save = start + 'test/'
@@ -266,6 +268,7 @@ def get_cifar_100(save_dir='data/cifar-100/'):
 		#print(tag)
 		#show(images[x])
 		out = images[x] * 255.0
+		out = out[...,::-1]
 		#show(out)
 		cv2.imwrite(save+tag,out)
 		#print(np.shape(images[x]))
@@ -280,7 +283,7 @@ def get_cifar_100(save_dir='data/cifar-100/'):
 		file.close()#'''
 	
 	# remove files that are not needed
-	#shutil.rmtree(folder_path)
+	shutil.rmtree(folder_path)
 '''_________________________________________________________________________________________'''
 #done
 
@@ -368,8 +371,22 @@ if __name__ == '__main__':
 	#get_cifar_10(save_dir='data/CIFAR-10/')
 	#get_image_net_2012(save_dir='/data1/image_net_2012/')
 	#extract_image_net_train()
-	print('extracting val...')
-	extract('/data1/image_net_2012/ILSVRC2012_img_val.tar', '/data1/image_net_2012/val/', remove_tar=True)
+	#print('extracting val...')
+	#extract('/data1/image_net_2012/ILSVRC2012_img_val.tar', '/data1/image_net_2012/val/', remove_tar=True)
 	
-	print('extracting test...')
-	extract('/data1/image_net_2012/ILSVRC2012_img_test.tar', '/data1/image_net_2012/test/', remove_tar=True)
+	#print('extracting test...')
+	#extract('/data1/image_net_2012/ILSVRC2012_img_test.tar', '/data1/image_net_2012/test/', remove_tar=True)
+
+	cifar_100 = '../data/cifar-100/train/*.png'
+	train_imgs = glob(cifar_100)
+	print(len(train_imgs))
+
+	unique_classes = []
+	for path in train_imgs:
+		path = path.replace('\\', '/').split('/')[-1]
+		label = path.split('+')[0]
+		if not(label in unique_classes):
+			unique_classes.append(label)
+	print('')
+	print(len(unique_classes))
+	print(unique_classes)
