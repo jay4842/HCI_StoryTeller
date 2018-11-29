@@ -8,7 +8,6 @@ import nltk
 
 import src.classify.test as cnn # classifier
 import src.text.rnn_test as rnn # text generator
-import src.text.coreNLP as coreNLP # post process
 # more later
 # This guy will combine the classifier and the rnn
 # - Flow
@@ -45,4 +44,5 @@ def deploy(args):
     tagged = nltk.pos_tag(tokens)
     entities = nltk.chunk.ne_chunk(tagged)
 
+    # here we will replace the main entity found with our predicted class
     print('\n{}'.format(entities))

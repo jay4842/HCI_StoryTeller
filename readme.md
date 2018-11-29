@@ -29,6 +29,8 @@ some time to finish downloading all the images.
 
 ## RNN datasets
 - [Edgar Allan Poe](http://www.textfiles.com/etext/AUTHORS/POE/)
+- [Kaggle Text Dataset](https://www.kaggle.com/mylesoneill/classic-literature-in-ascii)
+
 
 # Running
 TODO 
