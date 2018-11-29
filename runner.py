@@ -9,7 +9,9 @@ import src.classify.test as test
 import src.text.rnn_train as rnn_train
 import src.text.rnn_test as rnn_test
 import src.text.txt_download as txt_down
+import src.deploy as deploy
 
+# TODO: add download other text data
 data_dir = 'data/'
 restore_path = 'final/'
 
@@ -36,6 +38,10 @@ parser.add_argument('--download_poe', dest='download_poe', type=bool, default=Fa
 # rnn specific stuff here
 parser.add_argument('--author', dest='author', default='poe', help='What author to be used for testing.')
 parser.add_argument('--test_size', dest='test_size', type=int, default=2000, help='How many characters to generate during testing.')
+
+# deploy arguments here
+parser.add_argument('--deploy', dest='deploy', type=bool, default=False, help='Run the deploy phase. [Make sure your models saves are setup before using this]')
+
 # more later
 args = parser.parse_args()
 
@@ -62,8 +68,10 @@ if __name__ == '__main__':
             test.run_test(args)
         elif(args.mode=='rnn'):
             rnn_test.test_rnn(args)
-
+    # download poe
     if(args.download_poe):
         txt_down.download_poe()
-
+    # run deploy
+    if(args.deploy):
+        deploy.deploy(args)
 

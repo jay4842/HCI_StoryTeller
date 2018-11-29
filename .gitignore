@@ -9,6 +9,6 @@ text_dataset/
 src/__pycache__/
 src/net/__pycache__/
 src/text/__pycache__/
+src/classify/__pycache__/
 *.pyc
 rnn_saves/twain/
-*.pyc

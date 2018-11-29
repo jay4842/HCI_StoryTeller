@@ -5,6 +5,7 @@
 - OpenCV
 - requests
 - termcolor
+- nltk (Natural Language ToolKit)
 - Linux based OS (ex: ubuntu 16.04 || raspbian)
   
 # Drive

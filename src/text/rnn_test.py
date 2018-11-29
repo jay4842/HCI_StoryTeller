@@ -8,11 +8,11 @@ import math
 from glob import glob
 
 import src.text.my_txtutils as txt
-
-
-
 # deploy code
-def test_rnn(args):
+# - Load up the author you want to use
+# - 
+def test_rnn(args, display=True):
+    tf.reset_default_graph()
     SEQLEN = 30
     ALPHASIZE = txt.ALPHASIZE
     INTERNALSIZE = 512
@@ -47,8 +47,9 @@ def test_rnn(args):
     for x in files:
         meta_file = x if '.meta' in x else ''
 
-    print(meta_file)
+    if(display): print(meta_file)
 
+    output = ""
     # now lets restore the graph
     ncnt = 0
     with tf.Session() as sess:
@@ -76,15 +77,18 @@ def test_rnn(args):
             c = txt.sample_from_probabilities(yo, topn=2)
             y = np.array([[c]])  # shape [BATCHSIZE, SEQLEN] with BATCHSIZE=1 and SEQLEN=1
             c = chr(txt.convert_to_alphabet(c))
-            print(c, end="")
+            if(display): print(c, end="")
+            output += c
             test_file.write(c)
             if c == '\n':
                 ncnt = 0
             else:
                 ncnt += 1
             if ncnt == 100:
-                print("")
+                if(display): print("")
                 test_file.write('\n')
                 ncnt = 0
         test_file.close()
-    print('\n')
+    if(display): print('\n')
+
+    return output
