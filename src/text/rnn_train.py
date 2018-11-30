@@ -15,7 +15,7 @@ tf.set_random_seed(15)
 # - inspired from the shakespeer rnn
 def train_rnn(args):
     SEQLEN = 30
-    BATCHSIZE = 200
+    BATCHSIZE = args.batch_size
     ALPHASIZE = txt.ALPHASIZE
     INTERNALSIZE = 512
     NLAYERS = 5
@@ -73,8 +73,8 @@ def train_rnn(args):
     # folder at each run named 'log/<timestamp>/'. Two sets of data are saved so that
     # you can compare training and validation curves visually in Tensorboard.
     timestamp = str(math.trunc(time.time()))
-    summary_writer = tf.summary.FileWriter("log/" + timestamp + "-training")
-    validation_writer = tf.summary.FileWriter("log/" + timestamp + "-validation")
+    #summary_writer = tf.summary.FileWriter("log/" + timestamp + "-training")
+    #validation_writer = tf.summary.FileWriter("log/" + timestamp + "-validation")
     # For saving models
     os.makedirs(args.save_dir, exist_ok=True)
     # Only the last checkpoint will be saved
@@ -104,7 +104,7 @@ def train_rnn(args):
             feed_dict = {X: x, Y_: y_, Hin: istate, p_keep: 1.0, batch_size: BATCHSIZE}  # no dropout for validation
             y, l, bl, acc, smm = sess.run([Y, seqloss, batchloss, accuracy, summaries], feed_dict=feed_dict)
             txt.print_learning_learned_comparison(x, y, l, bookranges, bl, acc, epoch_size, step, epoch)
-            summary_writer.add_summary(smm, step)
+            #summary_writer.add_summary(smm, step)
         
         # run a validation step every 50 batches
         # The validation text should be a single sequence but that's too slow (1s per 1024 chars!),
@@ -121,8 +121,8 @@ def train_rnn(args):
             ls, acc, smm = sess.run([batchloss, accuracy, summaries], feed_dict=feed_dict)
             txt.print_validation_stats(ls, acc)
             # save validation data for Tensorboard
-            validation_writer.add_summary(smm, step)
-
+            #validation_writer.add_summary(smm, step)
+            saver.save(sess, '{}/rnn_val_save'.format(args.save_dir+'val/'), global_step=step)
         # display a short text generated with the current weights and biases (every 150 batches)
         if step // 3 % _50_BATCHES == 0:
             txt.print_text_generation_header()
