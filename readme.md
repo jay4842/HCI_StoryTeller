@@ -31,6 +31,8 @@ some time to finish downloading all the images.
 - [Edgar Allan Poe](http://www.textfiles.com/etext/AUTHORS/POE/)
 - [Kaggle Text Dataset](https://www.kaggle.com/mylesoneill/classic-literature-in-ascii)
 
+## Network notes
+- [Pre trained models](https://github.com/tensorflow/models/tree/master/research/slim#pre-trained-models)
 
 # Running
 TODO 

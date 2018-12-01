@@ -31,6 +31,7 @@ parser.add_argument('--mode', dest='mode', default='classify', help='Pick which 
 parser.add_argument('--test_dir', dest='test_dir', default='test/', help='Where you want to save test results.')
 parser.add_argument('--restore', dest='restore', default=None, help='Point to where our model save is.')
 parser.add_argument('--download_cifar100', dest='download_cifar100', type=bool, default=False, help='Download cifar-100 data set')
+parser.add_argument('--download_cifar10', dest='download_cifar10', type=bool, default=False, help='Download cifar-10 data set')
 
 # text download stuff
 parser.add_argument('--download_poe', dest='download_poe', type=bool, default=False, help='If we want to download poe data.')
@@ -47,7 +48,7 @@ args = parser.parse_args()
 
 
 if __name__ == '__main__':
-    if not(os.path.exists('data/cifar-10/')):
+    if (not(os.path.exists('data/cifar-10/')) or args.download_cifar10):
         down.get_cifar_10(save_dir='data/cifar-10/')
     os.system('clear') # clear screen
 
