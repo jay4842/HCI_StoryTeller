@@ -13,7 +13,7 @@ import src.text.my_txtutils as txt
 # - 
 def test_rnn(args, display=True):
     tf.reset_default_graph()
-    SEQLEN = 30
+    SEQLEN = 50
     ALPHASIZE = txt.ALPHASIZE
     INTERNALSIZE = 512
     NLAYERS = 5

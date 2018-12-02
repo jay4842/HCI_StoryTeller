@@ -14,7 +14,7 @@ tf.set_random_seed(15)
 # This wil be the training flow of the rnn
 # - inspired from the shakespeer rnn
 def train_rnn(args):
-    SEQLEN = 30
+    SEQLEN = 50
     BATCHSIZE = args.batch_size
     ALPHASIZE = txt.ALPHASIZE
     INTERNALSIZE = 512
@@ -78,7 +78,7 @@ def train_rnn(args):
     # For saving models
     os.makedirs(args.save_dir, exist_ok=True)
     # Only the last checkpoint will be saved
-    saver = tf.train.Saver(max_to_keep=1000)
+    saver = tf.train.Saver(max_to_keep=10)
     gen_file = open(args.save_dir + 'generated.txt', 'w')
     # For displaying progress
     # - changing this to my own implementation
@@ -122,7 +122,7 @@ def train_rnn(args):
             txt.print_validation_stats(ls, acc)
             # save validation data for Tensorboard
             #validation_writer.add_summary(smm, step)
-            saver.save(sess, '{}/rnn_val_save'.format(args.save_dir+'val/'), global_step=step)
+            #saver.save(sess, '{}/rnn_val_save'.format(args.save_dir+'val/'), global_step=step)
         # display a short text generated with the current weights and biases (every 150 batches)
         if step // 3 % _50_BATCHES == 0:
             txt.print_text_generation_header()
@@ -145,5 +145,5 @@ def train_rnn(args):
         step += BATCHSIZE * SEQLEN
     
     gen_file.close()
-    saved_file = saver.save(sess, '{}rnn_train_'.format(args.save_dir) + timestamp, global_step=step)
+    saved_file = saver.save(sess, '{}rnn_{}'.format(args.save_dir, args.epochs), global_step=step)
     print("Saved file: " + saved_file)
