@@ -13,3 +13,4 @@ src/classify/__pycache__/*
 *.pyc
 rnn_saves/twain/*
 rnn_saves/all/val/*
+*.npz
