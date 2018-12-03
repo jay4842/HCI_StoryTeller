@@ -125,8 +125,8 @@ class Tester:
         self.set_author(args, sess)
     
     # For setting the author/setting the model
-    def set_author(self, args, sess):
-        self.restore = self.restore_dir + args.author + '/5_layers_100/*'
+    def set_author(self, author, sess):
+        self.restore = self.restore_dir + author + '/5_layers_100/*'
         self.output = ""
         # now lets restore the graph
         tvars = tf.trainable_variables()

@@ -138,6 +138,8 @@ class WindowGUI:
         self.name_list = util.make_names_list()
         self.story_output = ''
         self.filename = 'data/imagenet/laska.png'
+        self.author = 'doyle'
+        self.rnn.set_author(self.author, self.rnn_sess)
     # 
     def deploy(self):
         os.system('clear')
@@ -164,7 +166,8 @@ class WindowGUI:
         self.displayText()
     # TODO: add changing the author
     def Author(self):
-        print(self.authorStg.get())
+        self.author = self.authorStg.get()
+        self.rnn.set_author(self.author, self.rnn_sess)
         return self.authorStg
 
     def Img_Input(self):
