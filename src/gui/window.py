@@ -61,7 +61,8 @@ def post(string_input, name_list, class_type):
     if(len(characters) <= 0):
         return None
     # check to see if characters are right next to each other
-    for idx in range(len(characters)-2):
+    if(len(characters) >= 2):
+        for idx in range(len(characters)-2):
         if(characters[idx][1] == characters[idx+1][1]-1):
             characters.remove(characters[idx])
             idx-=1
