@@ -38,6 +38,7 @@ class WindowGUI:
 
     def Author(self):
         print(self.authorStg.get())
+        return self.authorStg
 
     def Img_Input(self):
         #print("Image Input Selected")
@@ -53,7 +54,7 @@ class WindowGUI:
         self.T.grid(row=0)
         self.S.config(command=self.T.yview)
         self.T.config(yscrollcommand=self.S.set)
-        '''self.quote = """HAMLET: To be, or not to be--that is the question:
+        self.story = """HAMLET: To be, or not to be--that is the question:
         Whether 'tis nobler in the mind to suffer
         The slings and arrows of outrageous fortune
         Or to take arms against a sea of troubles
@@ -61,8 +62,8 @@ class WindowGUI:
         No more--and by a sleep to say we end
         The heartache, and the thousand natural shocks
         That flesh is heir to. 'Tis a consummation
-        Devoutly to be wished."""'''
-        #self.T.insert(END, self.quote)
+        Devoutly to be wished."""
+        self.T.insert(END, self.story)
 
 if __name__ == "__main__":
     root = Tk()
