@@ -63,9 +63,9 @@ def post(string_input, name_list, class_type):
     # check to see if characters are right next to each other
     if(len(characters) >= 2):
         for idx in range(len(characters)-2):
-        if(characters[idx][1] == characters[idx+1][1]-1):
-            characters.remove(characters[idx])
-            idx-=1
+            if(characters[idx][1] == characters[idx+1][1]-1):
+                characters.remove(characters[idx])
+                idx-=1
     changed_names = []
     for idx in range(len(characters)):
         if(len(changed_names) < 0):
@@ -93,7 +93,62 @@ def post(string_input, name_list, class_type):
                     tokens[characters[idx_j][1]] = changed_names[idx][1]
                     count += 1
     rebuild = "".join([" "+i if not i.startswith("'") and i not in string.punctuation else i for i in tokens]).strip()
+    rebuild = rebuild.replace('``', '\"').replace('\'\'', '\"')
     return rebuild
+
+# open a cv2 window and take pictures using the spacebar
+# - once done press ESC to exit and return the last captured frame
+def capture_picture():
+    # open the camera
+    os.makedirs('data/tmp/',exist_ok=True)
+    cam = cv2.VideoCapture(0)
+    cv2.namedWindow('Capture')
+    img_counter = 0
+    last_frame_name = ''
+    while True:
+        ret, frame = cam.read()
+        frame = np.fliplr(frame)
+        cv2.imshow('Capture', frame)
+        if not ret:
+            break;
+        k = cv2.waitKey(1)
+        if(k%256 == 27):
+            # esc pressed
+            print('closing camera')
+            break;
+        elif(k%256 == 32):
+            # space pressed
+            img_name = 'data/tmp/frame_{}.png'.format(img_counter)
+            last_frame_name = img_name
+            cv2.imwrite(img_name, frame)
+            print('wrote {}!'.format(img_name))
+            img_counter+=1
+    cam.release()
+    cv2.destroyWindow('Capture')
+    return last_frame_name
+
+# This guy will just take a few pics in the background without 
+# showing the window.
+def speech_capture_image():
+    # open the camera
+    os.makedirs('data/tmp/',exist_ok=True)
+    cam = cv2.VideoCapture(0)
+    img_counter = 0
+    last_frame_name = ''
+    for i in range(0,5):
+        ret, frame = cam.read()
+        frame = np.fliplr(frame)
+        if not ret:
+            break;
+        # space pressed
+        img_name = 'data/tmp/frame_{}.png'.format(img_counter)
+        last_frame_name = img_name
+        cv2.imwrite(img_name, frame)
+        print('wrote {}!'.format(img_name))
+        img_counter+=1
+    # release cam
+    cam.release()
+    return last_frame_name
 
 # Window class
 # - Holds GUI
@@ -124,6 +179,10 @@ class WindowGUI:
         #Quit Button
         self.close_button = Button(master, text="Quit", command=master.quit)
         self.close_button.grid(row=2, column=2)
+        
+        # capture button
+        self.greet_button = Button(master, text="Captuer Image", command=self.capture_image)
+        self.greet_button.grid(row=3, column=1)
 
         '''#Test output Button
         self.dis_button = Button(master, text="Sample Display", command=self.displayText)
@@ -141,7 +200,7 @@ class WindowGUI:
         self.story_output = ''
         self.filename = 'data/imagenet/laska.png'
         self.author = 'doyle'
-        self.rnn.set_author(self.author, self.rnn_sess)
+        #self.rnn.set_author(self.author, self.rnn_sess)
     # 
     def deploy(self):
         os.system('clear')
@@ -187,6 +246,13 @@ class WindowGUI:
         self.S.config(command=self.T.yview)
         self.T.config(yscrollcommand=self.S.set)
         self.T.insert(END, self.story_output)
+
+    # capture button
+    def capture_image(self):
+        self.filename = capture_picture()
+
+    def capture_speech_image(self):
+        print('listening for speech')
 
 if __name__ == "__main__":
     root = Tk()
