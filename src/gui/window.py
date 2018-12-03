@@ -31,7 +31,7 @@ def classify(vgg, sess, image_path='data/imagenet/laska.png'):
     #    print('{} {}'.format(class_names[p], prob[p]))
     
     top = preds[0]
-    output = class_names[top].split(',')[-]
+    output = class_names[top].split(',')[0]
     return output
     
 def post(string_input, name_list, class_type):
