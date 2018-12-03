@@ -1,6 +1,7 @@
 import os
 import sys
 import argparse
+import nltk
 
 # custom imports
 import src.downloader as down
@@ -35,7 +36,7 @@ parser.add_argument('--download_cifar10', dest='download_cifar10', type=bool, de
 
 # text download stuff
 parser.add_argument('--download_poe', dest='download_poe', type=bool, default=False, help='If we want to download poe data.')
-
+parser.add_argument('--download_nltk', dest='download_nltk', type=bool, default=False, help='Set to true if you need to download the nltk data.')
 # rnn specific stuff here
 parser.add_argument('--author', dest='author', default='poe', help='What author to be used for testing.')
 parser.add_argument('--test_size', dest='test_size', type=int, default=2000, help='How many characters to generate during testing.')
@@ -56,6 +57,9 @@ if __name__ == '__main__':
     if (args.download_cifar100):
         down.get_cifar_100(save_dir='data/cifar-100/')
     os.system('clear') # clear screen
+
+    if(args.download_nltk):
+        nltk.download('all')
 
     # training
     if(args.train):

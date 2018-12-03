@@ -122,12 +122,16 @@ class Tester:
         self.Yo = tf.nn.softmax(self.Ylogits, name='Yo')
         self.restore_dir = 'rnn_saves/'
         # more authors will be added later on
+        self.set_author(args, sess)
+    
+    # For setting the author/setting the model
+    def set_author(self, args, sess):
         self.restore = self.restore_dir + args.author + '/5_layers_100/*'
         self.output = ""
         # now lets restore the graph
         tvars = tf.trainable_variables()
         tvars = [var for var in tvars if not 'vgg' in var.name]
-        
+
         self.check_point = tf.train.latest_checkpoint(self.restore[:len(self.restore)-1])
         new_saver = tf.train.Saver(tvars)
         new_saver.restore(sess, self.check_point)
@@ -135,40 +139,40 @@ class Tester:
     def run(self, args, sess, display=False):
         self.output = ''
         ncnt = 0
-        with sess:
-                #new_saver = tf.train.import_meta_graph(meta_file)
-            x = txt.convert_from_alphabet(ord("L"))
-            x = np.array([[x]])  # shape [BATCHSIZE, SEQLEN] with BATCHSIZE=1 and SEQLEN=1
+        
+        #new_saver = tf.train.import_meta_graph(meta_file)
+        x = txt.convert_from_alphabet(ord("L"))
+        x = np.array([[x]])  # shape [BATCHSIZE, SEQLEN] with BATCHSIZE=1 and SEQLEN=1
 
-            # initial values
-            os.makedirs(args.test_dir + 'rnn/', exist_ok=True)
-            test_file = open(args.test_dir + 'rnn/{}.txt'.format(args.author), 'w')
-            y = x
-            h = np.zeros([1, self.INTERNALSIZE * self.NLAYERS], dtype=np.float32)  # [ BATCHSIZE, INTERNALSIZE * NLAYERS]
-            for i in range(args.test_size):
-                yo, h = sess.run(['Yo:0', 'H:0'], feed_dict={'X:0': y, 'pkeep:0': 1.0, 'Hin:0': h, 'batchsize:0': 1})
+         # initial values
+        os.makedirs(args.test_dir + 'rnn/', exist_ok=True)
+        test_file = open(args.test_dir + 'rnn/{}.txt'.format(args.author), 'w')
+        y = x
+        h = np.zeros([1, self.INTERNALSIZE * self.NLAYERS], dtype=np.float32)  # [ BATCHSIZE, INTERNALSIZE * NLAYERS]
+        for i in range(args.test_size):
+            yo, h = sess.run(['Yo:0', 'H:0'], feed_dict={'X:0': y, 'pkeep:0': 1.0, 'Hin:0': h, 'batchsize:0': 1})
 
-                # If sampling is be done from the topn most likely characters, the generated text
-                # is more credible and more "english". If topn is not set, it defaults to the full
-                # distribution (ALPHASIZE)
+            # If sampling is be done from the topn most likely characters, the generated text
+            # is more credible and more "english". If topn is not set, it defaults to the full
+            # distribution (ALPHASIZE)
 
-                # Recommended: topn = 10 for intermediate checkpoints, topn=2 or 3 for fully trained checkpoints
+            # Recommended: topn = 10 for intermediate checkpoints, topn=2 or 3 for fully trained checkpoints
 
-                c = txt.sample_from_probabilities(yo, topn=2)
-                y = np.array([[c]])  # shape [BATCHSIZE, SEQLEN] with BATCHSIZE=1 and SEQLEN=1
-                c = chr(txt.convert_to_alphabet(c))
-                if(display): print(c, end="")
-                self.output += c
-                test_file.write(c)
-                if c == '\n':
-                    ncnt = 0
-                else:
-                    ncnt += 1
-                if ncnt == 100:
-                    if(display): print("")
-                    test_file.write('\n')
-                    ncnt = 0
-            test_file.close()
-            if(display): print('\n')
+            c = txt.sample_from_probabilities(yo, topn=2)
+            y = np.array([[c]])  # shape [BATCHSIZE, SEQLEN] with BATCHSIZE=1 and SEQLEN=1
+            c = chr(txt.convert_to_alphabet(c))
+            if(display): print(c, end="")
+            self.output += c
+            test_file.write(c)
+            if c == '\n':
+                ncnt = 0
+            else:
+                ncnt += 1
+            if ncnt == 100:
+                if(display): print("")
+                test_file.write('\n')
+                ncnt = 0
+        test_file.close()
+        if(display): print('\n')
 
         return self.output
