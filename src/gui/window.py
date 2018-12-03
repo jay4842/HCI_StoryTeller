@@ -165,6 +165,7 @@ class WindowGUI:
     # TODO: add changing the author
     def Author(self):
         print(self.authorStg.get())
+        return self.authorStg
 
     def Img_Input(self):
         #print("Image Input Selected")
