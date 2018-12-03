@@ -144,6 +144,14 @@ def sigmoid_cross_entropy_balanced(logits, label, name='cross_entropy_loss'):
     return tf.where(tf.equal(count_pos, 0.0), 0.0, cost, name=name)
     # end of model helpers
 
+# name file from https://github.com/dominictarr/random-name 
+def make_names_list(list_path='data/names.txt'):
+    names = []
+    with open(list_path, 'r') as file:
+        for line in file:
+            names.append(line.replace('\n', ''))
+        file.close()
+    return names
 
 # MAIN IF WE WANT TO RUN FROM HERE
 if __name__ == '__main__':
