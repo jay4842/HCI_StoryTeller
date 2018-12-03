@@ -49,7 +49,7 @@ args = parser.parse_args()
 
 
 if __name__ == '__main__':
-    if (not(os.path.exists('data/cifar-10/')) or args.download_cifar10):
+    if (args.download_cifar10):
         down.get_cifar_10(save_dir='data/cifar-10/')
     os.system('clear') # clear screen
 
