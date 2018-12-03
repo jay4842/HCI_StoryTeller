@@ -2,6 +2,7 @@ from tkinter import *
 
 class WindowGUI:
     def __init__(self, master):
+        # tkinter stuff
         self.master = master
         master.title("HCI Project")
 
@@ -24,7 +25,8 @@ class WindowGUI:
         #Quit Button
         self.close_button = Button(master, text="Quit", command=master.quit)
         self.close_button.grid(row=2, column=1)
-
+        # tensorflow stuff
+        
     #Handler function to greet
     def Run_Example(self):
         print("Run Example Selected")
@@ -43,6 +45,7 @@ class WindowGUI:
     def getText(self):
         self.e.get()
 
-root = Tk()
-my_gui = WindowGUI(root)
-root.mainloop()
+if __name__ == "__main__":
+    root = Tk()
+    my_gui = WindowGUI(root)
+    root.mainloop()

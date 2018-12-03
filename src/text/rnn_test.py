@@ -92,3 +92,83 @@ def test_rnn(args, display=True):
     if(display): print('\n')
 
     return output
+
+# This guy needs to be a class, so that it's easoer to call
+class Tester:
+    def __init__(self, args, sess):
+        self.SEQLEN = 50
+        self.ALPHASIZE = txt.ALPHASIZE
+        self.INTERNALSIZE = 512
+        self.NLAYERS = 5
+        # model 
+        self.pkeep = tf.placeholder(tf.float32, name='pkeep')
+        self.batch_size = tf.placeholder(tf.int32, name='batchsize')
+        self.X   = tf.placeholder(tf.uint8, [None, None], name='X') # 
+        self.Xo  = tf.one_hot(self.X, self.ALPHASIZE, 1.0, 0.0)
+        self.Hin = tf.placeholder(tf.float32, [None, self.INTERNALSIZE*self.NLAYERS], name='Hin')
+        # Using a NLAYERS=3 of cells, unrolled SEQLEN=30 times
+        # dynamic_rnn infers SEQLEN from the size of the inputs Xo
+        self.cells = [rnn.GRUCell(self.INTERNALSIZE) for _ in range(self.NLAYERS)]
+        # weird dropout, well simple dropout
+        self.drop_cells = [rnn.DropoutWrapper(cell, input_keep_prob=self.pkeep) for cell in self.cells]
+        self.multi_cell = rnn.MultiRNNCell(self.drop_cells, state_is_tuple=False)
+        self.multi_cell = rnn.DropoutWrapper(self.multi_cell, output_keep_prob=self.pkeep)
+        # ^ The last layer is for the softmax dropout
+        self.Yr, self.H = tf.nn.dynamic_rnn(self.multi_cell, self.Xo, dtype=tf.float32, initial_state=self.Hin)
+        # H is that last state
+        self.H = tf.identity(self.H, name='H') # give it a tf name
+        self.Yflat = tf.reshape(self.Yr, [-1, self.INTERNALSIZE])
+        self.Ylogits = layers.linear(self.Yflat, self.ALPHASIZE)
+        self.Yo = tf.nn.softmax(self.Ylogits, name='Yo')
+        self.restore_dir = 'rnn_saves/'
+        # more authors will be added later on
+        self.restore = self.restore_dir + args.author + '/5_layers_100/*'
+        self.output = ""
+        # now lets restore the graph
+        tvars = tf.trainable_variables()
+        tvars = [var for var in tvars if not 'vgg' in var.name]
+        
+        self.check_point = tf.train.latest_checkpoint(self.restore[:len(self.restore)-1])
+        new_saver = tf.train.Saver(tvars)
+        new_saver.restore(sess, self.check_point)
+
+    def run(self, args, sess, display=False):
+        self.output = ''
+        ncnt = 0
+        with sess:
+                #new_saver = tf.train.import_meta_graph(meta_file)
+            x = txt.convert_from_alphabet(ord("L"))
+            x = np.array([[x]])  # shape [BATCHSIZE, SEQLEN] with BATCHSIZE=1 and SEQLEN=1
+
+            # initial values
+            os.makedirs(args.test_dir + 'rnn/', exist_ok=True)
+            test_file = open(args.test_dir + 'rnn/{}.txt'.format(args.author), 'w')
+            y = x
+            h = np.zeros([1, self.INTERNALSIZE * self.NLAYERS], dtype=np.float32)  # [ BATCHSIZE, INTERNALSIZE * NLAYERS]
+            for i in range(args.test_size):
+                yo, h = sess.run(['Yo:0', 'H:0'], feed_dict={'X:0': y, 'pkeep:0': 1.0, 'Hin:0': h, 'batchsize:0': 1})
+
+                # If sampling is be done from the topn most likely characters, the generated text
+                # is more credible and more "english". If topn is not set, it defaults to the full
+                # distribution (ALPHASIZE)
+
+                # Recommended: topn = 10 for intermediate checkpoints, topn=2 or 3 for fully trained checkpoints
+
+                c = txt.sample_from_probabilities(yo, topn=2)
+                y = np.array([[c]])  # shape [BATCHSIZE, SEQLEN] with BATCHSIZE=1 and SEQLEN=1
+                c = chr(txt.convert_to_alphabet(c))
+                if(display): print(c, end="")
+                self.output += c
+                test_file.write(c)
+                if c == '\n':
+                    ncnt = 0
+                else:
+                    ncnt += 1
+                if ncnt == 100:
+                    if(display): print("")
+                    test_file.write('\n')
+                    ncnt = 0
+            test_file.close()
+            if(display): print('\n')
+
+        return self.output
