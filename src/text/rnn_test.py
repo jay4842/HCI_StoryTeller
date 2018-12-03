@@ -122,7 +122,7 @@ class Tester:
         self.Yo = tf.nn.softmax(self.Ylogits, name='Yo')
         self.restore_dir = 'rnn_saves/'
         # more authors will be added later on
-        self.set_author(args, sess)
+        self.set_author(args.author, sess)
     
     # For setting the author/setting the model
     def set_author(self, author, sess):
