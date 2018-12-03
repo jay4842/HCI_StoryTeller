@@ -32,7 +32,8 @@ some time to finish downloading all the images.
 - [Kaggle Text Dataset](https://www.kaggle.com/mylesoneill/classic-literature-in-ascii)
 
 ## Network notes
-- [Pre trained models](https://github.com/tensorflow/models/tree/master/research/slim#pre-trained-models)
+- [vgg16 model info](https://www.cs.toronto.edu/~frossard/post/vgg16/)
+- [model weights](https://www.cs.toronto.edu/~frossard/vgg16/vgg16_weights.npz)
 
 # Running
 TODO 

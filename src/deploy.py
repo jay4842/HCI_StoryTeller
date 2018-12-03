@@ -6,8 +6,8 @@ import time
 import signal 
 import nltk
 import cv2
-
-import src.classify.test as cnn # classifier
+from tkinter import *
+from src.gui.window import Window
 from src.net.vgg import vgg16
 from data.imagenet.imagenet_classes import class_names
 import src.text.rnn_test as rnn # text generator
@@ -35,8 +35,11 @@ def classify(image_path='data/imagenet/laska.png'):
 #   - After that is done read story aloud using something
 #   - Maybe give the rnn input with voice
 def deploy(args):
+    root = Tk()
     os.system('clear')
     print('working...')
+    app = Window(root)
+    root.mainloop()
     #nltk.download('all') # first need to try this guy out
 
      # Now move on to the actual bulk stuff
