@@ -1,8 +1,6 @@
-*.png
-*.jpg
-*.JPG
 checkpoints/*
-data/*
+data/cifar-10/*
+data/cifar-100/*
 dataset/*
 log/*
 text_dataset/*
