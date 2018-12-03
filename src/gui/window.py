@@ -4,7 +4,7 @@ class WindowGUI:
     def __init__(self, master):
         self.master = master
         master.title("HCI Project")
-
+        self.e = Entry()
         #Title
         self.label = Label(master, text="Menu")
         self.label.grid(row=0, column=1)
@@ -33,15 +33,18 @@ class WindowGUI:
         print("Author Selected")
         self.eTop = Toplevel()    #object to create a new window
         self.eTop.title("Author")
+        self.label = Label(self.eTop, text="Author")
+        self.label.grid(row=0, column=0)
         self.e = Entry(self.eTop).grid(row=0, column=1)
-        self.get = Button(self.eTop, text = "Get Text", command=self.getText)
-        self.quit = Button(self.eTop, text = "Quit", command=self.eTop.destroy)
+        self.get = Button(self.eTop, text = "Get Text", command=self.getText).grid(row=1, column=0)
+        self.quit = Button(self.eTop, text = "Quit", command=self.eTop.destroy).grid(row=1, column=1)
 
     def Img_Input(self):
         print("Image Input Selected")
 
     def getText(self):
-        self.e.get()
+        self.AuthorName = self.e.get()
+        print (self.AuthorName)
 
 root = Tk()
 my_gui = WindowGUI(root)
