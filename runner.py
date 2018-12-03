@@ -43,7 +43,7 @@ parser.add_argument('--test_size', dest='test_size', type=int, default=2000, hel
 
 # deploy arguments here
 parser.add_argument('--deploy', dest='deploy', type=bool, default=False, help='Run the deploy phase. [Make sure your models saves are setup before using this]')
-
+parser.add_argument('--download_vgg', type=bool, default=False, help='Set to True to downlaod the vgg16 weights.')
 # more later
 args = parser.parse_args()
 
@@ -61,6 +61,8 @@ if __name__ == '__main__':
     if(args.download_nltk):
         nltk.download('all')
 
+    if(args.download_vgg):
+        down.download_with_progress('https://www.cs.toronto.edu/~frossard/vgg16/vgg16_weights.npz', 'model_saves/vgg16/vgg16_weights.npz')
     # training
     if(args.train):
         if(args.mode=='classify'):
@@ -79,4 +81,3 @@ if __name__ == '__main__':
     # run deploy
     if(args.deploy):
         deploy.deploy(args)
-
