@@ -7,19 +7,19 @@ class MyFirstGUI:
         #e = Entry(master)
 
         self.label = Label(master, text="Menu")
-        self.label.pack()
+        self.label.grid(row=0)
 
         self.greet_button = Button(master, text="Run Example", command=self.Run_Example)
-        self.greet_button.pack()
+        self.greet_button.grid(row=1)
 
         self.greet_button = Button(master, text="Author", command=self.Author)
-        self.greet_button.pack()
+        self.greet_button.grid(row=2)
 
         self.greet_button = Button(master, text="Image Input", command=self.Img_Input)
-        self.greet_button.pack()
+        self.greet_button.grid(row=3)
 
-        self.close_button = Button(master, text="Close", command=master.quit)
-        self.close_button.pack()
+        self.close_button = Button(master, text="Quit", command=master.quit)
+        self.close_button.grid(row=4)
 
     #Handler function to greet
     def Run_Example(self):
