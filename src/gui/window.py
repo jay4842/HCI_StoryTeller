@@ -1,22 +1,36 @@
-from tkinter import Tk, Label, Button
+from tkinter import *
 
 class MyFirstGUI:
     def __init__(self, master):
         self.master = master
-        master.title("A simple GUI")
+        master.title("HCI Project")
+        #e = Entry(master)
 
-        self.label = Label(master, text="This is our first GUI!")
+        self.label = Label(master, text="Menu")
         self.label.pack()
 
-        self.greet_button = Button(master, text="Greet", command=self.greet)
+        self.greet_button = Button(master, text="Run Example", command=self.Run_Example)
+        self.greet_button.pack()
+
+        self.greet_button = Button(master, text="Author", command=self.Author)
+        self.greet_button.pack()
+
+        self.greet_button = Button(master, text="Image Input", command=self.Img_Input)
         self.greet_button.pack()
 
         self.close_button = Button(master, text="Close", command=master.quit)
         self.close_button.pack()
 
     #Handler function to greet
-    def greet(self):
-        print("Greetings!")
+    def Run_Example(self):
+        print("Run Example Selected")
+
+    def Author(self):
+        print("Author Selected")
+        e.pack()
+
+    def Img_Input(self):
+        print("Image Input Selected")
 
 root = Tk()
 my_gui = MyFirstGUI(root)
