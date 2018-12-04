@@ -9,7 +9,7 @@ class Speech_Recogn:
     '''
     def __init__(self):
         #wordbank of acceptable string types
-        self.wordBank = ["capture", "exit"]
+        self.wordBank = ["capture", "exit", "run"]
 
         #set up reconizer and microphone objects
         self.recognizer = sr.Recognizer()

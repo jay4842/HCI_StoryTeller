@@ -9,6 +9,7 @@ import cv2
 import nltk
 import string
 from threading import Thread
+from time import sleep
 
 import src.util as util
 from src.net.vgg import vgg16
@@ -214,7 +215,7 @@ class WindowGUI:
         self.running = False
         self.thread.join()
         self.master.quit()
-
+    # deploy flow
     def deploy(self):
         os.system('clear')
         print('working...')
@@ -226,6 +227,8 @@ class WindowGUI:
         # now generate the rnn output
         post_none = False
         story_output = ''
+        # Sometimes we don't get a character list output
+        # - So try running 5 times, we should get one that works
         for idx in range(0,5):
             story_output = self.rnn.run(self.args, self.rnn_sess, display=False)
             story_output = post(story_output, self.name_list, class_type)
@@ -236,8 +239,9 @@ class WindowGUI:
     #Handler function to greet
     def Run_Example(self):
         print("Run Example Selected")
-        self.story_output = self.deploy()
-        self.displayText()
+        if not(self.capturing):
+            self.story_output = self.deploy()
+            self.displayText()
     # TODO: add changing the author
     def Author(self):
         self.author = self.authorStg.get()
@@ -274,11 +278,22 @@ class WindowGUI:
     def capture_speech_image(self):
         while self.running:
             word_found = self.speech_handler.speech_runner()
-            if(word_found is not None and word_found == 'capture'):
-                if not(self.capturing):
+            if(word_found is not None):
+                if (not(self.capturing) and word_found == 'capture'):
                     self.capturing = True
                     self.filename = speech_capture_image()
                     self.capturing = False
+                # Run example, also we don't want to capture during runtime
+                if(not(self.capturing) and word_found == 'run'):
+                    self.capturing = True
+                    self.Run_Example()
+                    self.capturing = False
+
+                if(word_found == 'quit'):
+                    self.running = False
+                    self.quit()
+                    break # break out of loop too
+            sleep(1) # take a second break
 
 if __name__ == "__main__":
     root = Tk()
