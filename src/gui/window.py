@@ -8,12 +8,13 @@ from random import randint
 import cv2
 import nltk
 import string
+from threading import Thread
 
 import src.util as util
 from src.net.vgg import vgg16
 from data.imagenet.imagenet_classes import class_names
 import src.text.rnn_test as rnn_test
-
+import src.gui.speech_recog as speech
 
 def random_name(name_list):
     max_ = len(name_list)
@@ -157,6 +158,8 @@ class WindowGUI:
     def __init__(self, master, args):
         # tkinter stuff
         self.master = master
+        self.running = True
+        self.capturing = False
         master.title("HCI Project")
         self.authorStg = StringVar(master, value='doyle')
 
@@ -201,7 +204,17 @@ class WindowGUI:
         self.filename = 'data/imagenet/laska.png'
         self.author = 'doyle'
         #self.rnn.set_author(self.author, self.rnn_sess)
+        # speech stuff
+        self.speech_handler = speech.Speech_Recogn()
+
+        self.thread = Thread(target=self.capture_speed_image, args=(,))
+        self.thread.start() # start listing
     # 
+    def quit(self):
+        self.running = False
+        self.thread.join()
+        self.master.quit()
+
     def deploy(self):
         os.system('clear')
         print('working...')
@@ -249,10 +262,20 @@ class WindowGUI:
 
     # capture button
     def capture_image(self):
-        self.filename = capture_picture()
+        if not(self.capturing):
+            self.capturing = True
+            self.filename = capture_picture()
+            self.capturing = False
 
+    # listen to voice. If something is heard captuer it
     def capture_speech_image(self):
-        print('listening for speech')
+        while self.running:
+            word_found = self.speech_handler.speech_runner()
+            if(word_found is not None and word_found == 'capture'):
+                if not(self.capturing):
+                    self.capturing = True
+                    self.filename = speech_capture_image()
+                    self.capturing = False
 
 if __name__ == "__main__":
     root = Tk()

@@ -1,4 +1,5 @@
 import speech_recognition as sr
+import time
 
 class Speech_Recogn:
     '''
@@ -56,34 +57,33 @@ class Speech_Recogn:
         return response
 
     def speech_runner(self):
-        #loop to catch command
-        while(1):
-            print("Say Something...")
+        #loop for three seconds
+        t_end = time.time() + (60 * 3)
+        heard_something = False
+        print("Listening...")
+        while(time.time() < t_end):
             self.speech_cmd = self.recognize_speech_from_mic()
             if self.speech_cmd["Transcription"]:
+                heard_something = True
                 break
             if not self.speech_cmd["Success"]:
                 break
-            print("I didn't catch that. Please re-re-re-repeat")
+            #print("I didn't catch that. Please re-re-re-repeat")
         
         #if error, stop the program
         if self.speech_cmd["Error"]:
-            print("Error: {}".format(self.speech_cmd["Error"]))
+            #print("Error: {}".format(self.speech_cmd["Error"]))
             return None
+        # if it heard something
+        if(heard_something):
+            #show user transcription
+            #print("You said: {}". format(self.speech_cmd["Transcription"]))
+            for word in self.wordBank:
+                if(self.speech_cmd["Transcription"].lower() == word):
+                    #print(word + '!')
+                    return word
 
-        #show user transcription
-        print("You said: {}". format(self.speech_cmd["Transcription"]))
-
-        #check which option the user selected
-        if self.speech_cmd["Transcription"].lower() == self.wordBank[0]:
-            #Here will go the capture section
-            print ("Capture!") 
-
-        elif self.speech_cmd["Transcription"].lower() == self.wordBank[1]:
-            print("Exit!")
-
-        else:
-            print("Incorrect. Try again")
+        return None # if nothing was caught
 
 '''if __name__ == "__main__":
     s = Speech_Recogn()
