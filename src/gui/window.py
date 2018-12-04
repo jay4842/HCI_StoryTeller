@@ -207,7 +207,7 @@ class WindowGUI:
         # speech stuff
         self.speech_handler = speech.Speech_Recogn()
 
-        self.thread = Thread(target=self.capture_speed_image, args=(,))
+        self.thread = Thread(target=self.capture_speed_image, args=())
         self.thread.start() # start listing
     # 
     def quit(self):
