@@ -1,5 +1,6 @@
 from tkinter import filedialog
 from tkinter import *
+from gtts import gTTS
 
 import tensorflow as tf
 import numpy as np
@@ -10,6 +11,7 @@ import nltk
 import string
 from threading import Thread
 from time import sleep
+import subprocess
 
 import src.util as util
 from src.net.vgg import vgg16
@@ -241,7 +243,8 @@ class WindowGUI:
         print("Run Example Selected")
         if not(self.capturing):
             self.story_output = self.deploy()
-            self.displayText()
+            self.output=self.displayText()
+
     # TODO: add changing the author
     def Author(self):
         self.author = self.authorStg.get()
@@ -266,6 +269,25 @@ class WindowGUI:
         self.S.config(command=self.T.yview)
         self.T.config(yscrollcommand=self.S.set)
         self.T.insert(END, self.story_output)
+
+        # play button
+        self.play_button = Button(self.disTop, text="Play!", command=self.playAudio)
+        self.play_button.grid(row=31, column=0)
+
+        #Quit Button
+        '''self.close_button = Button(self.disTop, text="Quit", command=self.quit_)
+        self.close_button.grid(row=32, column=0)'''
+
+        return self.story_output
+
+    def playAudio(self):
+        self.language = 'en' #set language to english
+        #create 
+        self.myobj = gTTS(text=self.story_output, lang=self.language, slow=False)
+        #save the speech 
+        self.myobj.save("story.mp3")
+        #play text to speech
+        subprocess.call(["mpg321", "story.mp3"])
 
     # capture button
     def capture_image(self):
