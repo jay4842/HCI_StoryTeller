@@ -180,7 +180,7 @@ class WindowGUI:
         self.greet_button.grid(row=2, column=1)
 
         #Quit Button
-        self.close_button = Button(master, text="Quit", command=master.quit)
+        self.close_button = Button(master, text="Quit", command=self.quit_)
         self.close_button.grid(row=2, column=2)
         
         # capture button
@@ -207,10 +207,10 @@ class WindowGUI:
         # speech stuff
         self.speech_handler = speech.Speech_Recogn()
 
-        self.thread = Thread(target=self.capture_speed_image, args=())
+        self.thread = Thread(target=self.capture_speech_image, args=())
         self.thread.start() # start listing
     # 
-    def quit(self):
+    def quit_(self):
         self.running = False
         self.thread.join()
         self.master.quit()
@@ -246,8 +246,11 @@ class WindowGUI:
 
     def Img_Input(self):
         #print("Image Input Selected")
-        self.filename = filedialog.askopenfilename(initialdir = "./",title = "Select file",filetypes = (("jpeg files","*.jpg"),("png files","*.png"),("all files","*.*")))
-        print(self.filename)
+        if not(self.capturing):
+            self.capturing = True
+            self.filename = filedialog.askopenfilename(initialdir = "./",title = "Select file",filetypes = (("jpeg files","*.jpg"),("png files","*.png"),("all files","*.*")))
+            print(self.filename)
+            self.capturing = False
     #Display the story in its own window
     def displayText(self):
         self.disTop = Toplevel()    #create a new window
