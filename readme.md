@@ -1,4 +1,5 @@
 # Story Teller
+Our goald for this project was to build a story generator that can generate a story based on an input image. Mainly using this classifier to return a sort of entity. Using this we were able to explore the subject of entity representation, dynamic entity representation, and using entity representation as a context.
 
 # requirments
 - scipy==1.0.0
